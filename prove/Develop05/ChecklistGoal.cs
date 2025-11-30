@@ -1,12 +1,10 @@
-// This goal must be done a set number of times.
-// Example: attend the temple 10 times.
+// This goal must be completed a certain number of times.
 public class ChecklistGoal : Goal
 {
-    private int _targetCount;   // needed to finish
-    private int _currentCount;  // progress so far
+    private int _targetCount;   // needed times
+    private int _currentCount;  // times done so far
     private int _bonus;         // extra points at the end
 
-    // Constructor
     public ChecklistGoal(string name, string description, int points, int targetCount, int bonus)
         : base(name, description, points)
     {
@@ -15,19 +13,17 @@ public class ChecklistGoal : Goal
         _currentCount = 0;
     }
 
-    // Lets the Load method restore progress safely.
+    // Used when loading from a file to restore progress.
     public void SetCurrentCount(int count)
     {
         _currentCount = count;
     }
 
-    // True if we've reached the target.
     public override bool IsComplete()
     {
         return _currentCount >= _targetCount;
     }
 
-    // Adds 1 progress and returns points (plus bonus if finished).
     public override int RecordEvent()
     {
         if (_currentCount < _targetCount)
@@ -36,33 +32,33 @@ public class ChecklistGoal : Goal
 
             if (_currentCount == _targetCount)
             {
+                // Final time gives normal points + bonus.
                 return _points + _bonus;
             }
 
             return _points;
         }
 
+        // Already finished, no more points.
         return 0;
     }
 
-    // Shows progress like Completed 2/5 times.
     public override string GetStatus()
     {
-        string checkbox;
+        string box;
 
         if (IsComplete())
         {
-            checkbox = "[X]";
+            box = "[X]";
         }
         else
         {
-            checkbox = "[ ]";
+            box = "[ ]";
         }
 
-        return $"{checkbox} Completed {_currentCount}/{_targetCount}";
+        return $"{box} Completed {_currentCount}/{_targetCount}";
     }
 
-    // Save format for file.
     public override string SaveFormat()
     {
         return $"Checklist|{_name}|{_description}|{_points}|{_bonus}|{_targetCount}|{_currentCount}";

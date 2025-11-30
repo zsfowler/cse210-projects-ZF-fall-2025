@@ -1,10 +1,9 @@
 using System;
 
-// Base class for all goals.
-// Other goal types inherit from this class.
+// This is the base class for all goals.
 public abstract class Goal
 {
-    // Protected so child classes can use them directly.
+    // Shared attributes for all goals.
     protected string _name;
     protected string _description;
     protected int _points;
@@ -17,23 +16,23 @@ public abstract class Goal
         _points = points;
     }
 
-    // Public read-only properties so other classes can display values.
-    public string Name
+    // Simple "getter" methods instead of properties.
+    public string GetName()
     {
-        get { return _name; }
+        return _name;
     }
 
-    public string Description
+    public string GetDescription()
     {
-        get { return _description; }
+        return _description;
     }
 
-    public int Points
+    public int GetPoints()
     {
-        get { return _points; }
+        return _points;
     }
 
-    // Child classes must override these.
+    // Methods that each child class must override.
     public abstract bool IsComplete();
     public abstract int RecordEvent();
     public abstract string GetStatus();

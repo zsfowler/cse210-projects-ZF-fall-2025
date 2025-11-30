@@ -5,18 +5,17 @@ class Program
 {
     static void Main(string[] args)
     {
-        // EXCEEDING REQUIREMENTS:
-        // I added a simple leveling system in GoalManager.
-        // Every 1000 points increases the level by 1.
-        // The level shows on the menu.
-
         GoalManager manager = new GoalManager();
         string choice = "";
+
+        // EXCEEDING REQUIREMENTS:
+        // I added a simple leveling system in GoalManager.
+        // Every 1000 points the level goes up by 1.
 
         while (choice != "6")
         {
             Console.WriteLine("\n--- Eternal Quest ---");
-            Console.WriteLine($"Current Score: {manager.Score}");
+            Console.WriteLine($"Current Score: {manager.GetScore()}");
             Console.WriteLine($"Level: {manager.GetLevel()}");
 
             Console.WriteLine("\nMenu Options:");
@@ -56,7 +55,7 @@ class Program
             }
             else
             {
-                Console.WriteLine("That is not a valid option. Try again.");
+                Console.WriteLine("That is not a valid option.");
             }
         }
     }
@@ -108,25 +107,22 @@ class Program
         }
     }
 
-    // Saves goals to a file.
     static void SaveGoals(GoalManager manager)
     {
         Console.Write("\nEnter the filename to save to: ");
         string fileName = Console.ReadLine();
 
-        SaveLoadHandler.Save(fileName, manager.GetGoals(), manager.Score);
+        SaveLoadHandler.Save(fileName, manager.GetGoals(), manager.GetScore());
 
         Console.WriteLine("Goals saved!");
     }
 
-    // Loads goals from a file and returns a new manager.
     static GoalManager LoadGoals()
     {
         Console.Write("\nEnter the filename to load: ");
         string fileName = Console.ReadLine();
 
         var loadedData = SaveLoadHandler.Load(fileName);
-
         List<Goal> goals = loadedData.Item1;
         int score = loadedData.Item2;
 

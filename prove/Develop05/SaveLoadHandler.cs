@@ -2,16 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-// This handles saving and loading goals from a text file.
+// This class saves and loads goals to a file.
 public static class SaveLoadHandler
 {
-    // Saves the score and all goals.
     public static void Save(string fileName, List<Goal> goals, int score)
     {
         using (StreamWriter writer = new StreamWriter(fileName))
         {
+            // First line is the score.
             writer.WriteLine(score);
 
+            // Each other line is one goal.
             foreach (Goal g in goals)
             {
                 writer.WriteLine(g.SaveFormat());
@@ -19,7 +20,6 @@ public static class SaveLoadHandler
         }
     }
 
-    // Loads goals and score, then returns them.
     public static (List<Goal>, int) Load(string fileName)
     {
         List<Goal> goals = new List<Goal>();
@@ -49,6 +49,7 @@ public static class SaveLoadHandler
 
                 if (completed)
                 {
+                    // Mark as completed once.
                     sg.RecordEvent();
                 }
 
@@ -56,18 +57,17 @@ public static class SaveLoadHandler
             }
             else if (type == "Eternal")
             {
-                goals.Add(new EternalGoal(name, description, points));
+                EternalGoal eg = new EternalGoal(name, description, points);
+                goals.Add(eg);
             }
             else if (type == "Checklist")
             {
                 int bonus = int.Parse(parts[4]);
-                int targetCount = int.Parse(parts[5]);
-                int currentCount = int.Parse(parts[6]);
+                int target = int.Parse(parts[5]);
+                int current = int.Parse(parts[6]);
 
-                ChecklistGoal cg = new ChecklistGoal(name, description, points, targetCount, bonus);
-
-                // Restore progress without giving points again.
-                cg.SetCurrentCount(currentCount);
+                ChecklistGoal cg = new ChecklistGoal(name, description, points, target, bonus);
+                cg.SetCurrentCount(current);
 
                 goals.Add(cg);
             }

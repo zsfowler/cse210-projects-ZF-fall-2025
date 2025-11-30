@@ -1,23 +1,19 @@
-// This goal is finished once.
-// Example: run a marathon one time.
+// This goal is completed one time and then it is done.
 public class SimpleGoal : Goal
 {
     private bool _completed;
 
-    // Constructor
     public SimpleGoal(string name, string description, int points)
         : base(name, description, points)
     {
         _completed = false;
     }
 
-    // True if done.
     public override bool IsComplete()
     {
         return _completed;
     }
 
-    // Gives points only the first time.
     public override int RecordEvent()
     {
         if (!_completed)
@@ -26,10 +22,10 @@ public class SimpleGoal : Goal
             return _points;
         }
 
+        // No more points after it is done.
         return 0;
     }
 
-    // Shows [X] when complete.
     public override string GetStatus()
     {
         if (_completed)
@@ -42,7 +38,6 @@ public class SimpleGoal : Goal
         }
     }
 
-    // Save format for file.
     public override string SaveFormat()
     {
         return $"Simple|{_name}|{_description}|{_points}|{_completed}";

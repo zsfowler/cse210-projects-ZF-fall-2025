@@ -1,32 +1,28 @@
-// This goal never ends.
-// Example: read scriptures daily.
+// This goal never ends. It can be recorded many times.
 public class EternalGoal : Goal
 {
-    // Constructor
     public EternalGoal(string name, string description, int points)
         : base(name, description, points)
     {
     }
 
-    // Eternal goals are never completed.
     public override bool IsComplete()
     {
+        // Eternal goals are never complete.
         return false;
     }
 
-    // Each time you do it, you get points.
     public override int RecordEvent()
     {
+        // Each time gives points.
         return _points;
     }
 
-    // Uses infinity symbol for fun.
     public override string GetStatus()
     {
         return "[∞]";
     }
 
-    // Save format for file.
     public override string SaveFormat()
     {
         return $"Eternal|{_name}|{_description}|{_points}";

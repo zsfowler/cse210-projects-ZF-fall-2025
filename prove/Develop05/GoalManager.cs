@@ -1,38 +1,41 @@
 using System;
 using System.Collections.Generic;
 
-// This class holds all goals and the user's score.
+// This class keeps track of goals and the total score.
 public class GoalManager
 {
-    private List<Goal> _goals = new List<Goal>();
-    private int _score = 0;
+    private List<Goal> _goals;
+    private int _score;
 
-    // Read-only score property.
-    public int Score
+    public GoalManager()
     {
-        get { return _score; }
+        _goals = new List<Goal>();
+        _score = 0;
     }
 
-    // Creativity: simple level system.
-    // Every 1000 points increases the level by 1.
+    // Return the current score (no property).
+    public int GetScore()
+    {
+        return _score;
+    }
+
+    // Simple "extra" feature: level based on score.
     public int GetLevel()
     {
+        // Every 1000 points is a new level.
         return (_score / 1000) + 1;
     }
 
-    // Adds a goal to the list.
     public void AddGoal(Goal goal)
     {
         _goals.Add(goal);
     }
 
-    // Adds points to score.
     public void AddScore(int points)
     {
         _score += points;
     }
 
-    // Displays all goals in a list.
     public void ShowGoals()
     {
         Console.WriteLine("\nHere are your goals:\n");
@@ -40,38 +43,48 @@ public class GoalManager
         for (int i = 0; i < _goals.Count; i++)
         {
             Goal g = _goals[i];
-
-            Console.WriteLine($"{i + 1}. {g.GetStatus()} {g.Name} - {g.Description}");
+            Console.WriteLine($"{i + 1}. {g.GetStatus()} {g.GetName()} - {g.GetDescription()}");
         }
     }
 
-    // Lets user record doing a goal.
     public void RecordEvent()
     {
+        if (_goals.Count == 0)
+        {
+            Console.WriteLine("\nYou do not have any goals yet.");
+            return;
+        }
+
         ShowGoals();
         Console.Write("\nWhich goal did you complete? Enter the number: ");
-        int choice = int.Parse(Console.ReadLine()) - 1;
+        string input = Console.ReadLine();
+        int choice;
 
-        if (choice >= 0 && choice < _goals.Count)
+        if (!int.TryParse(input, out choice))
         {
-            int earnedPoints = _goals[choice].RecordEvent();
-            AddScore(earnedPoints);
+            Console.WriteLine("That is not a number.");
+            return;
+        }
 
-            Console.WriteLine($"\nYou earned {earnedPoints} points!");
-        }
-        else
+        int index = choice - 1;
+
+        if (index < 0 || index >= _goals.Count)
         {
-            Console.WriteLine("Invalid choice.");
+            Console.WriteLine("That is not a valid goal.");
+            return;
         }
+
+        int earned = _goals[index].RecordEvent();
+        _score += earned;
+
+        Console.WriteLine($"\nYou earned {earned} points!");
     }
 
-    // Returns the list so Save can write them.
     public List<Goal> GetGoals()
     {
         return _goals;
     }
 
-    // Used when loading a file.
     public void SetScore(int score)
     {
         _score = score;
